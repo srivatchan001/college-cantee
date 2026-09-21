@@ -1,0 +1,3152 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>College Canteen Analytics</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Inter,Segoe UI,Arial,sans-serif;
+}
+
+body{
+    background:#f4f6f9;
+    color:#172033;
+}
+
+/* SIDEBAR */
+.sidebar{
+    position:fixed;
+    left:0;
+    top:0;
+    width:245px;
+    height:100vh;
+    background:#111827;
+    color:white;
+    padding:22px 15px;
+    z-index:1000;
+}
+
+.logo{
+    font-size:20px;
+    font-weight:800;
+    padding:0 12px 25px;
+}
+
+.logo span{
+    color:#60a5fa;
+}
+
+.nav{
+    list-style:none;
+}
+
+.nav li{
+    margin:6px 0;
+}
+
+.nav button{
+    width:100%;
+    border:0;
+    background:transparent;
+    color:#cbd5e1;
+    padding:13px 15px;
+    border-radius:9px;
+    text-align:left;
+    cursor:pointer;
+    font-size:14px;
+    transition:.2s;
+}
+
+.nav button:hover,
+.nav button.active{
+    background:#2563eb;
+    color:white;
+}
+
+.nav-icon{
+    display:inline-block;
+    width:27px;
+}
+
+/* MAIN */
+.main{
+    margin-left:245px;
+    min-height:100vh;
+}
+
+.header{
+    height:70px;
+    background:white;
+    border-bottom:1px solid #e5e7eb;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:0 30px;
+    position:sticky;
+    top:0;
+    z-index:500;
+}
+
+.header h2{
+    font-size:21px;
+}
+
+.header-right{
+    display:flex;
+    align-items:center;
+    gap:15px;
+}
+
+.status{
+    background:#dcfce7;
+    color:#15803d;
+    padding:7px 12px;
+    border-radius:20px;
+    font-size:12px;
+    font-weight:600;
+}
+
+.avatar{
+    width:38px;
+    height:38px;
+    border-radius:50%;
+    background:#2563eb;
+    color:white;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:bold;
+}
+
+.content{
+    padding:30px;
+}
+
+/* SECTIONS */
+.page{
+    display:none;
+}
+
+.page.active{
+    display:block;
+}
+
+/* CARDS */
+.cards{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:18px;
+    margin:20px 0 25px;
+}
+
+.card{
+    background:white;
+    border-radius:14px;
+    padding:22px;
+    border:1px solid #e5e7eb;
+    box-shadow:0 4px 15px rgba(0,0,0,.03);
+}
+
+.card-label{
+    color:#64748b;
+    font-size:13px;
+    margin-bottom:10px;
+}
+
+.card-value{
+    font-size:27px;
+    font-weight:800;
+}
+
+.card-sub{
+    font-size:12px;
+    margin-top:8px;
+    color:#16a34a;
+}
+
+/* PANELS */
+.panel{
+    background:white;
+    border:1px solid #e5e7eb;
+    border-radius:14px;
+    padding:22px;
+    margin-bottom:22px;
+}
+
+.panel-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:18px;
+}
+
+.panel-header h3{
+    font-size:17px;
+}
+
+/* BUTTONS */
+.btn{
+    border:0;
+    padding:10px 15px;
+    border-radius:8px;
+    cursor:pointer;
+    font-weight:600;
+    font-size:13px;
+}
+
+.btn-primary{
+    background:#2563eb;
+    color:white;
+}
+
+.btn-primary:hover{
+    background:#1d4ed8;
+}
+
+.btn-success{
+    background:#16a34a;
+    color:white;
+}
+
+.btn-danger{
+    background:#dc2626;
+    color:white;
+}
+
+.btn-secondary{
+    background:#e2e8f0;
+    color:#334155;
+}
+
+.btn-small{
+    padding:6px 9px;
+    font-size:11px;
+}
+
+/* TABLE */
+.table-wrap{
+    overflow-x:auto;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+th{
+    background:#f8fafc;
+    color:#64748b;
+    font-size:12px;
+    text-align:left;
+    padding:13px;
+    border-bottom:1px solid #e5e7eb;
+}
+
+td{
+    padding:13px;
+    font-size:13px;
+    border-bottom:1px solid #f1f5f9;
+}
+
+.badge{
+    display:inline-block;
+    padding:5px 9px;
+    border-radius:15px;
+    font-size:11px;
+    font-weight:600;
+}
+
+.badge.completed{
+    background:#dcfce7;
+    color:#15803d;
+}
+
+.badge.pending{
+    background:#fef3c7;
+    color:#b45309;
+}
+
+.badge.preparing{
+    background:#dbeafe;
+    color:#1d4ed8;
+}
+
+.badge.cancelled{
+    background:#fee2e2;
+    color:#b91c1c;
+}
+
+/* GRID */
+.two-col{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:22px;
+}
+
+/* CHART */
+.chart-box{
+    height:280px;
+    display:flex;
+    align-items:flex-end;
+    gap:14px;
+    padding:25px 15px 10px;
+    border-bottom:1px solid #e5e7eb;
+}
+
+.bar-container{
+    flex:1;
+    height:100%;
+    display:flex;
+    flex-direction:column;
+    justify-content:flex-end;
+    align-items:center;
+    gap:7px;
+}
+
+.bar{
+    width:70%;
+    max-width:55px;
+    background:#2563eb;
+    border-radius:7px 7px 0 0;
+    min-height:5px;
+    transition:.4s;
+}
+
+.bar-label{
+    font-size:10px;
+    color:#64748b;
+}
+
+.bar-value{
+    font-size:10px;
+    font-weight:bold;
+}
+
+/* FORM */
+.form-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:15px;
+}
+
+.form-group{
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+}
+
+.form-group.full{
+    grid-column:1/-1;
+}
+
+label{
+    font-size:12px;
+    font-weight:600;
+    color:#475569;
+}
+
+input,
+select{
+    padding:11px 12px;
+    border:1px solid #cbd5e1;
+    border-radius:8px;
+    outline:none;
+    background:white;
+}
+
+input:focus,
+select:focus{
+    border-color:#2563eb;
+}
+
+.form-actions{
+    display:flex;
+    gap:10px;
+    margin-top:18px;
+}
+
+/* SEARCH */
+.filters{
+    display:flex;
+    gap:10px;
+    margin-bottom:18px;
+    flex-wrap:wrap;
+}
+
+.filters input,
+.filters select{
+    min-width:170px;
+}
+
+/* INSIGHTS */
+.insight{
+    border-left:4px solid #2563eb;
+    background:#f8fafc;
+    padding:15px;
+    border-radius:8px;
+    margin-bottom:12px;
+}
+
+.insight strong{
+    display:block;
+    margin-bottom:5px;
+}
+
+.insight p{
+    font-size:13px;
+    color:#64748b;
+    line-height:1.5;
+}
+
+/* REPORT */
+.report-stat{
+    display:flex;
+    justify-content:space-between;
+    padding:15px 0;
+    border-bottom:1px solid #e5e7eb;
+}
+
+.report-stat:last-child{
+    border-bottom:0;
+}
+
+/* TOAST */
+.toast{
+    position:fixed;
+    right:25px;
+    bottom:25px;
+    background:#111827;
+    color:white;
+    padding:13px 18px;
+    border-radius:9px;
+    display:none;
+    z-index:5000;
+    font-size:13px;
+}
+
+.toast.show{
+    display:block;
+}
+
+/* MODAL */
+.modal{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.45);
+    z-index:3000;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+}
+
+.modal.show{
+    display:flex;
+}
+
+.modal-content{
+    background:white;
+    width:100%;
+    max-width:600px;
+    max-height:90vh;
+    overflow:auto;
+    border-radius:15px;
+    padding:25px;
+}
+
+.modal-header{
+    display:flex;
+    justify-content:space-between;
+    margin-bottom:20px;
+}
+
+.close{
+    border:0;
+    background:none;
+    font-size:25px;
+    cursor:pointer;
+}
+
+/* MOBILE */
+.mobile-menu{
+    display:none;
+    border:0;
+    background:none;
+    font-size:24px;
+}
+
+@media(max-width:1000px){
+    .cards{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .two-col{
+        grid-template-columns:1fr;
+    }
+}
+
+@media(max-width:700px){
+    .sidebar{
+        transform:translateX(-100%);
+        transition:.3s;
+    }
+
+    .sidebar.open{
+        transform:translateX(0);
+    }
+
+    .main{
+        margin-left:0;
+    }
+
+    .mobile-menu{
+        display:block;
+    }
+
+    .content{
+        padding:18px;
+    }
+
+    .cards{
+        grid-template-columns:1fr;
+    }
+
+    .form-grid{
+        grid-template-columns:1fr;
+    }
+
+    .header{
+        padding:0 18px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar" id="sidebar">
+
+    <div class="logo">
+        🍽️ Canteen<span>Analytics</span>
+    </div>
+
+    <ul class="nav">
+
+        <li>
+            <button class="nav-btn active" data-page="dashboard">
+                <span class="nav-icon">🏠</span> Dashboard
+            </button>
+        </li>
+
+        <li>
+            <button class="nav-btn" data-page="orders">
+                <span class="nav-icon">🧾</span> Orders
+            </button>
+        </li>
+
+        <li>
+            <button class="nav-btn" data-page="food">
+                <span class="nav-icon">🍔</span> Food Items
+            </button>
+        </li>
+
+        <li>
+            <button class="nav-btn" data-page="analytics">
+                <span class="nav-icon">📊</span> Analytics
+            </button>
+        </li>
+
+        <li>
+            <button class="nav-btn" data-page="insights">
+                <span class="nav-icon">🤖</span> AI Insights
+            </button>
+        </li>
+
+        <li>
+            <button class="nav-btn" data-page="reports">
+                <span class="nav-icon">📄</span> Reports
+            </button>
+        </li>
+
+    </ul>
+
+</aside>
+
+
+<!-- MAIN -->
+<main class="main">
+
+    <!-- HEADER -->
+    <header class="header">
+
+        <div style="display:flex;align-items:center;gap:12px;">
+            <button class="mobile-menu" id="mobileMenu">☰</button>
+            <h2 id="pageTitle">Dashboard</h2>
+        </div>
+
+        <div class="header-right">
+            <span class="status">● System Online</span>
+            <div class="avatar">CA</div>
+        </div>
+
+    </header>
+
+
+    <div class="content">
+
+        <!-- DASHBOARD -->
+        <section class="page active" id="dashboard">
+
+            <div>
+                <h1>College Canteen Dashboard</h1>
+                <p style="color:#64748b;margin-top:5px;">
+                    Monitor orders, sales and canteen performance.
+                </p>
+            </div>
+
+            <div class="cards">
+
+                <div class="card">
+                    <div class="card-label">Total Orders</div>
+                    <div class="card-value" id="totalOrders">0</div>
+                    <div class="card-sub">All recorded orders</div>
+                </div>
+
+                <div class="card">
+                    <div class="card-label">Total Sales</div>
+                    <div class="card-value" id="totalSales">₹0</div>
+                    <div class="card-sub">Overall revenue</div>
+                </div>
+
+                <div class="card">
+                    <div class="card-label">Items Sold</div>
+                    <div class="card-value" id="totalItems">0</div>
+                    <div class="card-sub">Total quantity</div>
+                </div>
+
+                <div class="card">
+                    <div class="card-label">Today's Revenue</div>
+                    <div class="card-value" id="todayRevenue">₹0</div>
+                    <div class="card-sub">Today's completed sales</div>
+                </div>
+
+            </div>
+
+
+            <div class="two-col">
+
+                <div class="panel">
+
+                    <div class="panel-header">
+                        <h3>Recent Orders</h3>
+                        <button class="btn btn-primary btn-small"
+                                onclick="showPage('orders')">
+                            View All
+                        </button>
+                    </div>
+
+                    <div class="table-wrap">
+
+                        <table>
+
+                            <thead>
+                                <tr>
+                                    <th>Student</th>
+                                    <th>Food</th>
+                                    <th>Amount</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+
+                            <tbody id="recentOrders"></tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
+
+                <div class="panel">
+
+                    <div class="panel-header">
+                        <h3>Top Selling Items</h3>
+                    </div>
+
+                    <div id="topItems"></div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ORDERS -->
+        <section class="page" id="orders">
+
+            <div class="panel">
+
+                <div class="panel-header">
+
+                    <div>
+                        <h3>Order Management</h3>
+                        <p style="color:#64748b;font-size:12px;margin-top:5px;">
+                            Add and manage canteen orders.
+                        </p>
+                    </div>
+
+                    <button class="btn btn-primary" onclick="openOrderModal()">
+                        + Add Order
+                    </button>
+
+                </div>
+
+
+                <div class="filters">
+
+                    <input
+                        type="text"
+                        id="orderSearch"
+                        placeholder="🔍 Search student or food..."
+                    >
+
+                    <select id="statusFilter">
+                        <option value="">All Status</option>
+                        <option>Pending</option>
+                        <option>Preparing</option>
+                        <option>Completed</option>
+                        <option>Cancelled</option>
+                    </select>
+
+                    <select id="categoryFilter">
+                        <option value="">All Categories</option>
+                        <option>Breakfast</option>
+                        <option>Lunch</option>
+                        <option>Snacks</option>
+                        <option>Beverages</option>
+                        <option>Desserts</option>
+                    </select>
+
+                </div>
+
+
+                <div class="table-wrap">
+
+                    <table>
+
+                        <thead>
+
+                            <tr>
+                                <th>ID</th>
+                                <th>Student</th>
+                                <th>Food</th>
+                                <th>Category</th>
+                                <th>Qty</th>
+                                <th>Amount</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+
+                        </thead>
+
+                        <tbody id="ordersTable"></tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- FOOD -->
+        <section class="page" id="food">
+
+            <div class="panel">
+
+                <div class="panel-header">
+
+                    <div>
+                        <h3>Food Items</h3>
+                        <p style="color:#64748b;font-size:12px;">
+                            Manage food menu and pricing.
+                        </p>
+                    </div>
+
+                    <button class="btn btn-primary"
+                            onclick="openFoodModal()">
+                        + Add Food
+                    </button>
+
+                </div>
+
+
+                <div class="table-wrap">
+
+                    <table>
+
+                        <thead>
+                            <tr>
+                                <th>Food Name</th>
+                                <th>Category</th>
+                                <th>Price</th>
+                                <th>Quantity</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="foodTable"></tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ANALYTICS -->
+        <section class="page" id="analytics">
+
+            <div class="panel">
+
+                <div class="panel-header">
+                    <h3>Sales Analytics</h3>
+
+                    <button class="btn btn-secondary"
+                            onclick="refreshAnalytics()">
+                        ↻ Refresh
+                    </button>
+                </div>
+
+                <p style="color:#64748b;font-size:13px;">
+                    Sales performance based on completed orders.
+                </p>
+
+            </div>
+
+
+            <div class="two-col">
+
+                <div class="panel">
+
+                    <div class="panel-header">
+                        <h3>Sales by Day</h3>
+                    </div>
+
+                    <div class="chart-box" id="dailyChart"></div>
+
+                </div>
+
+
+                <div class="panel">
+
+                    <div class="panel-header">
+                        <h3>Category Sales</h3>
+                    </div>
+
+                    <div class="chart-box" id="categoryChart"></div>
+
+                </div>
+
+            </div>
+
+
+            <div class="panel">
+
+                <div class="panel-header">
+                    <h3>Food Item Performance</h3>
+                </div>
+
+                <div class="table-wrap">
+
+                    <table>
+
+                        <thead>
+                            <tr>
+                                <th>Food Item</th>
+                                <th>Quantity Sold</th>
+                                <th>Revenue</th>
+                                <th>Performance</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="foodPerformance"></tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- AI INSIGHTS -->
+        <section class="page" id="insights">
+
+            <div class="panel">
+
+                <div class="panel-header">
+
+                    <div>
+                        <h3>🤖 AI-Powered Insights</h3>
+                        <p style="color:#64748b;font-size:12px;">
+                            Automated analysis of your canteen data.
+                        </p>
+                    </div>
+
+                    <button class="btn btn-primary"
+                            onclick="generateInsights()">
+                        Generate Insights
+                    </button>
+
+                </div>
+
+                <div id="insightsContainer"></div>
+
+            </div>
+
+        </section>
+
+
+        <!-- REPORTS -->
+        <section class="page" id="reports">
+
+            <div class="panel">
+
+                <div class="panel-header">
+
+                    <div>
+                        <h3>Canteen Sales Report</h3>
+                        <p style="color:#64748b;font-size:12px;">
+                            Summary of canteen performance.
+                        </p>
+                    </div>
+
+                    <div style="display:flex;gap:8px;">
+
+                        <button class="btn btn-secondary"
+                                onclick="printReport()">
+                            🖨 Print
+                        </button>
+
+                        <button class="btn btn-success"
+                                onclick="exportCSV()">
+                            ↓ Export CSV
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <div class="report-stat">
+                    <span>Total Orders</span>
+                    <strong id="reportOrders">0</strong>
+                </div>
+
+                <div class="report-stat">
+                    <span>Total Revenue</span>
+                    <strong id="reportRevenue">₹0</strong>
+                </div>
+
+                <div class="report-stat">
+                    <span>Total Items Sold</span>
+                    <strong id="reportItems">0</strong>
+                </div>
+
+                <div class="report-stat">
+                    <span>Average Order Value</span>
+                    <strong id="reportAverage">₹0</strong>
+                </div>
+
+                <div class="report-stat">
+                    <span>Best Selling Item</span>
+                    <strong id="reportBestItem">-</strong>
+                </div>
+
+                <div class="report-stat">
+                    <span>Best Category</span>
+                    <strong id="reportBestCategory">-</strong>
+                </div>
+
+            </div>
+
+        </section>
+
+    </div>
+
+</main>
+
+
+<!-- ORDER MODAL -->
+<div class="modal" id="orderModal">
+
+    <div class="modal-content">
+
+        <div class="modal-header">
+
+            <h3 id="orderModalTitle">Add New Order</h3>
+
+            <button class="close"
+                    onclick="closeOrderModal()">
+                ×
+            </button>
+
+        </div>
+
+
+        <form id="orderForm">
+
+            <input type="hidden" id="editOrderId">
+
+            <div class="form-grid">
+
+                <div class="form-group">
+                    <label>Student Name</label>
+                    <input id="studentName"
+                           required
+                           placeholder="Enter student name">
+                </div>
+
+
+                <div class="form-group">
+                    <label>Food Item</label>
+
+                    <select id="orderFood" required>
+                        <option value="">Select food</option>
+                    </select>
+
+                </div>
+
+
+                <div class="form-group">
+                    <label>Category</label>
+
+                    <select id="orderCategory" required>
+
+                        <option value="">Select category</option>
+                        <option>Breakfast</option>
+                        <option>Lunch</option>
+                        <option>Snacks</option>
+                        <option>Beverages</option>
+                        <option>Desserts</option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="form-group">
+                    <label>Quantity</label>
+
+                    <input
+                        type="number"
+                        id="orderQty"
+                        min="1"
+                        value="1"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+                    <label>Price per Item (₹)</label>
+
+                    <input
+                        type="number"
+                        id="orderPrice"
+                        min="0"
+                        step="0.01"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+                    <label>Total Amount (₹)</label>
+
+                    <input
+                        type="number"
+                        id="orderTotal"
+                        readonly
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>Status</label>
+
+                    <select id="orderStatus">
+
+                        <option>Pending</option>
+                        <option>Preparing</option>
+                        <option>Completed</option>
+                        <option>Cancelled</option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>Date</label>
+
+                    <input
+                        type="date"
+                        id="orderDate"
+                        required
+                    >
+
+                </div>
+
+            </div>
+
+
+            <div class="form-actions">
+
+                <button type="submit"
+                        class="btn btn-primary">
+                    Save Order
+                </button>
+
+                <button type="button"
+                        class="btn btn-secondary"
+                        onclick="closeOrderModal()">
+                    Cancel
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<!-- FOOD MODAL -->
+<div class="modal" id="foodModal">
+
+    <div class="modal-content">
+
+        <div class="modal-header">
+
+            <h3 id="foodModalTitle">Add Food Item</h3>
+
+            <button class="close"
+                    onclick="closeFoodModal()">
+                ×
+            </button>
+
+        </div>
+
+
+        <form id="foodForm">
+
+            <input type="hidden" id="editFoodId">
+
+            <div class="form-grid">
+
+                <div class="form-group">
+                    <label>Food Name</label>
+                    <input id="foodName" required>
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>Category</label>
+
+                    <select id="foodCategory" required>
+
+                        <option>Breakfast</option>
+                        <option>Lunch</option>
+                        <option>Snacks</option>
+                        <option>Beverages</option>
+                        <option>Desserts</option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>Price (₹)</label>
+
+                    <input
+                        type="number"
+                        id="foodPrice"
+                        min="0"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>Available Quantity</label>
+
+                    <input
+                        type="number"
+                        id="foodQuantity"
+                        min="0"
+                        required
+                    >
+
+                </div>
+
+            </div>
+
+
+            <div class="form-actions">
+
+                <button type="submit"
+                        class="btn btn-primary">
+                    Save Food
+                </button>
+
+                <button type="button"
+                        class="btn btn-secondary"
+                        onclick="closeFoodModal()">
+                    Cancel
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+
+<script>
+
+/* =====================================================
+   COLLEGE CANTEEN ANALYTICS
+   SINGLE PAGE APPLICATION
+===================================================== */
+
+
+/* -----------------------------
+   DEFAULT FOOD DATA
+----------------------------- */
+
+const defaultFoods = [
+
+    {
+        id:1,
+        name:"Idli",
+        category:"Breakfast",
+        price:30,
+        quantity:100
+    },
+
+    {
+        id:2,
+        name:"Dosa",
+        category:"Breakfast",
+        price:50,
+        quantity:80
+    },
+
+    {
+        id:3,
+        name:"Meals",
+        category:"Lunch",
+        price:80,
+        quantity:70
+    },
+
+    {
+        id:4,
+        name:"Parotta",
+        category:"Lunch",
+        price:60,
+        quantity:60
+    },
+
+    {
+        id:5,
+        name:"Fried Rice",
+        category:"Lunch",
+        price:90,
+        quantity:50
+    },
+
+    {
+        id:6,
+        name:"Samosa",
+        category:"Snacks",
+        price:20,
+        quantity:100
+    },
+
+    {
+        id:7,
+        name:"Tea",
+        category:"Beverages",
+        price:15,
+        quantity:150
+    },
+
+    {
+        id:8,
+        name:"Coffee",
+        category:"Beverages",
+        price:20,
+        quantity:150
+    },
+
+    {
+        id:9,
+        name:"Fresh Juice",
+        category:"Beverages",
+        price:40,
+        quantity:70
+    },
+
+    {
+        id:10,
+        name:"Burger",
+        category:"Snacks",
+        price:70,
+        quantity:60
+    }
+
+];
+
+
+/* -----------------------------
+   SAMPLE ORDERS
+----------------------------- */
+
+const defaultOrders = [
+
+    {
+        id:1001,
+        student:"Arun",
+        food:"Dosa",
+        category:"Breakfast",
+        qty:2,
+        price:50,
+        total:100,
+        date:today(-4),
+        status:"Completed"
+    },
+
+    {
+        id:1002,
+        student:"Priya",
+        food:"Meals",
+        category:"Lunch",
+        qty:1,
+        price:80,
+        total:80,
+        date:today(-3),
+        status:"Completed"
+    },
+
+    {
+        id:1003,
+        student:"Karthik",
+        food:"Tea",
+        category:"Beverages",
+        qty:2,
+        price:15,
+        total:30,
+        date:today(-2),
+        status:"Completed"
+    },
+
+    {
+        id:1004,
+        student:"Divya",
+        food:"Fried Rice",
+        category:"Lunch",
+        qty:2,
+        price:90,
+        total:180,
+        date:today(-1),
+        status:"Completed"
+    },
+
+    {
+        id:1005,
+        student:"Rahul",
+        food:"Samosa",
+        category:"Snacks",
+        qty:3,
+        price:20,
+        total:60,
+        date:today(0),
+        status:"Completed"
+    },
+
+    {
+        id:1006,
+        student:"Meena",
+        food:"Coffee",
+        category:"Beverages",
+        qty:2,
+        price:20,
+        total:40,
+        date:today(0),
+        status:"Preparing"
+    },
+
+    {
+        id:1007,
+        student:"Vijay",
+        food:"Burger",
+        category:"Snacks",
+        qty:1,
+        price:70,
+        total:70,
+        date:today(0),
+        status:"Pending"
+    }
+
+];
+
+
+/* -----------------------------
+   LOCAL STORAGE
+----------------------------- */
+
+let foods =
+    JSON.parse(localStorage.getItem("canteenFoods"))
+    || defaultFoods;
+
+let orders =
+    JSON.parse(localStorage.getItem("canteenOrders"))
+    || defaultOrders;
+
+
+function saveData(){
+
+    localStorage.setItem(
+        "canteenFoods",
+        JSON.stringify(foods)
+    );
+
+    localStorage.setItem(
+        "canteenOrders",
+        JSON.stringify(orders)
+    );
+
+}
+
+
+/* -----------------------------
+   DATE HELPERS
+----------------------------- */
+
+function today(offset=0){
+
+    const d = new Date();
+
+    d.setDate(
+        d.getDate()+offset
+    );
+
+    return d.toISOString().split("T")[0];
+
+}
+
+
+/* -----------------------------
+   CURRENCY
+----------------------------- */
+
+function money(value){
+
+    return "₹" + Number(value || 0).toLocaleString(
+        "en-IN",
+        {
+            maximumFractionDigits:2
+        }
+    );
+
+}
+
+
+/* -----------------------------
+   TOAST
+----------------------------- */
+
+function toast(message){
+
+    const t =
+        document.getElementById("toast");
+
+    t.textContent = message;
+
+    t.classList.add("show");
+
+    setTimeout(()=>{
+        t.classList.remove("show");
+    },2500);
+
+}
+
+
+/* =====================================================
+   NAVIGATION
+===================================================== */
+
+document.querySelectorAll(".nav-btn")
+.forEach(button => {
+
+    button.addEventListener("click",()=>{
+
+        showPage(
+            button.dataset.page
+        );
+
+    });
+
+});
+
+
+function showPage(page){
+
+    document.querySelectorAll(".page")
+    .forEach(section=>{
+        section.classList.remove("active");
+    });
+
+    document.getElementById(page)
+        .classList.add("active");
+
+
+    document.querySelectorAll(".nav-btn")
+    .forEach(button=>{
+        button.classList.toggle(
+            "active",
+            button.dataset.page === page
+        );
+    });
+
+
+    const titles = {
+
+        dashboard:"Dashboard",
+        orders:"Order Management",
+        food:"Food Items",
+        analytics:"Sales Analytics",
+        insights:"AI Insights",
+        reports:"Reports"
+
+    };
+
+    document.getElementById("pageTitle")
+        .textContent = titles[page];
+
+
+    if(page === "analytics")
+        refreshAnalytics();
+
+    if(page === "insights")
+        generateInsights();
+
+    if(page === "reports")
+        updateReports();
+
+
+    document
+        .getElementById("sidebar")
+        .classList.remove("open");
+
+}
+
+
+/* =====================================================
+   MOBILE MENU
+===================================================== */
+
+document
+    .getElementById("mobileMenu")
+    .addEventListener("click",()=>{
+
+        document
+            .getElementById("sidebar")
+            .classList.toggle("open");
+
+    });
+
+
+/* =====================================================
+   DASHBOARD
+===================================================== */
+
+function updateDashboard(){
+
+    const validOrders =
+        orders.filter(
+            o => o.status !== "Cancelled"
+        );
+
+
+    const totalOrders =
+        validOrders.length;
+
+
+    const totalSales =
+        validOrders.reduce(
+            (sum,o)=>sum + Number(o.total),
+            0
+        );
+
+
+    const totalItems =
+        validOrders.reduce(
+            (sum,o)=>sum + Number(o.qty),
+            0
+        );
+
+
+    const todayRevenue =
+        validOrders
+        .filter(o=>o.date === today())
+        .reduce(
+            (sum,o)=>sum + Number(o.total),
+            0
+        );
+
+
+    document.getElementById("totalOrders")
+        .textContent = totalOrders;
+
+
+    document.getElementById("totalSales")
+        .textContent = money(totalSales);
+
+
+    document.getElementById("totalItems")
+        .textContent = totalItems;
+
+
+    document.getElementById("todayRevenue")
+        .textContent = money(todayRevenue);
+
+
+    renderRecentOrders();
+
+    renderTopItems();
+
+    updateReports();
+
+}
+
+
+/* =====================================================
+   RECENT ORDERS
+===================================================== */
+
+function renderRecentOrders(){
+
+    const tbody =
+        document.getElementById("recentOrders");
+
+
+    const recent =
+        orders.slice()
+        .reverse()
+        .slice(0,5);
+
+
+    tbody.innerHTML =
+        recent.map(o=>`
+
+            <tr>
+
+                <td>${escapeHTML(o.student)}</td>
+
+                <td>${escapeHTML(o.food)}</td>
+
+                <td>${money(o.total)}</td>
+
+                <td>
+                    <span class="badge ${o.status.toLowerCase()}">
+                        ${o.status}
+                    </span>
+                </td>
+
+            </tr>
+
+        `).join("");
+
+}
+
+
+/* =====================================================
+   TOP ITEMS
+===================================================== */
+
+function calculateItemSales(){
+
+    const map = {};
+
+
+    orders
+    .filter(o=>o.status !== "Cancelled")
+    .forEach(o=>{
+
+        if(!map[o.food])
+            map[o.food] = 0;
+
+        map[o.food] += Number(o.qty);
+
+    });
+
+
+    return map;
+
+}
+
+
+function renderTopItems(){
+
+    const map =
+        calculateItemSales();
+
+
+    const sorted =
+        Object.entries(map)
+        .sort((a,b)=>b[1]-a[1])
+        .slice(0,5);
+
+
+    const container =
+        document.getElementById("topItems");
+
+
+    if(!sorted.length){
+
+        container.innerHTML =
+            "<p>No sales data available.</p>";
+
+        return;
+
+    }
+
+
+    container.innerHTML =
+        sorted.map((item,index)=>`
+
+            <div style="
+                display:flex;
+                justify-content:space-between;
+                padding:13px 0;
+                border-bottom:1px solid #f1f5f9;
+            ">
+
+                <span>
+                    ${index+1}. ${escapeHTML(item[0])}
+                </span>
+
+                <strong>
+                    ${item[1]} sold
+                </strong>
+
+            </div>
+
+        `).join("");
+
+}
+
+
+/* =====================================================
+   ORDERS
+===================================================== */
+
+function renderOrders(){
+
+    const tbody =
+        document.getElementById("ordersTable");
+
+
+    const search =
+        document.getElementById("orderSearch")
+        .value.toLowerCase();
+
+
+    const status =
+        document.getElementById("statusFilter")
+        .value;
+
+
+    const category =
+        document.getElementById("categoryFilter")
+        .value;
+
+
+    const filtered =
+        orders.filter(o=>{
+
+            const matchesSearch =
+                o.student.toLowerCase()
+                .includes(search)
+                ||
+                o.food.toLowerCase()
+                .includes(search);
+
+            const matchesStatus =
+                !status ||
+                o.status === status;
+
+            const matchesCategory =
+                !category ||
+                o.category === category;
+
+            return (
+                matchesSearch &&
+                matchesStatus &&
+                matchesCategory
+            );
+
+        });
+
+
+    if(!filtered.length){
+
+        tbody.innerHTML = `
+            <tr>
+                <td colspan="9"
+                    style="text-align:center;padding:30px;">
+                    No orders found.
+                </td>
+            </tr>
+        `;
+
+        return;
+
+    }
+
+
+    tbody.innerHTML =
+        filtered.map(o=>`
+
+            <tr>
+
+                <td>#${o.id}</td>
+
+                <td>${escapeHTML(o.student)}</td>
+
+                <td>${escapeHTML(o.food)}</td>
+
+                <td>${o.category}</td>
+
+                <td>${o.qty}</td>
+
+                <td>${money(o.total)}</td>
+
+                <td>${o.date}</td>
+
+                <td>
+
+                    <span class="badge ${o.status.toLowerCase()}">
+                        ${o.status}
+                    </span>
+
+                </td>
+
+                <td>
+
+                    <button
+                        class="btn btn-secondary btn-small"
+                        onclick="editOrder(${o.id})">
+                        Edit
+                    </button>
+
+                    <button
+                        class="btn btn-danger btn-small"
+                        onclick="deleteOrder(${o.id})">
+                        Delete
+                    </button>
+
+                </td>
+
+            </tr>
+
+        `).join("");
+
+}
+
+
+document
+    .getElementById("orderSearch")
+    .addEventListener("input",renderOrders);
+
+document
+    .getElementById("statusFilter")
+    .addEventListener("change",renderOrders);
+
+document
+    .getElementById("categoryFilter")
+    .addEventListener("change",renderOrders);
+
+
+/* =====================================================
+   ORDER MODAL
+===================================================== */
+
+function populateFoodDropdown(){
+
+    const select =
+        document.getElementById("orderFood");
+
+
+    select.innerHTML =
+        `<option value="">Select food</option>`;
+
+
+    foods.forEach(food=>{
+
+        select.innerHTML += `
+            <option value="${escapeAttribute(food.name)}">
+                ${escapeHTML(food.name)}
+            </option>
+        `;
+
+    });
+
+}
+
+
+function openOrderModal(){
+
+    populateFoodDropdown();
+
+    document.getElementById("orderForm")
+        .reset();
+
+    document.getElementById("editOrderId")
+        .value = "";
+
+    document.getElementById("orderDate")
+        .value = today();
+
+    document.getElementById("orderModalTitle")
+        .textContent = "Add New Order";
+
+    document.getElementById("orderModal")
+        .classList.add("show");
+
+}
+
+
+function closeOrderModal(){
+
+    document.getElementById("orderModal")
+        .classList.remove("show");
+
+}
+
+
+/* auto-fill price/category */
+
+document
+    .getElementById("orderFood")
+    .addEventListener("change",function(){
+
+        const food =
+            foods.find(
+                f=>f.name === this.value
+            );
+
+
+        if(food){
+
+            document.getElementById("orderPrice")
+                .value = food.price;
+
+            document.getElementById("orderCategory")
+                .value = food.category;
+
+            calculateOrderTotal();
+
+        }
+
+    });
+
+
+document
+    .getElementById("orderQty")
+    .addEventListener(
+        "input",
+        calculateOrderTotal
+    );
+
+
+document
+    .getElementById("orderPrice")
+    .addEventListener(
+        "input",
+        calculateOrderTotal
+    );
+
+
+function calculateOrderTotal(){
+
+    const qty =
+        Number(
+            document.getElementById("orderQty").value
+        ) || 0;
+
+
+    const price =
+        Number(
+            document.getElementById("orderPrice").value
+        ) || 0;
+
+
+    document.getElementById("orderTotal")
+        .value = qty * price;
+
+}
+
+
+/* SAVE ORDER */
+
+document
+    .getElementById("orderForm")
+    .addEventListener("submit",function(e){
+
+        e.preventDefault();
+
+
+        const editId =
+            Number(
+                document.getElementById("editOrderId").value
+            );
+
+
+        const student =
+            document.getElementById("studentName").value.trim();
+
+
+        const food =
+            document.getElementById("orderFood").value;
+
+
+        const category =
+            document.getElementById("orderCategory").value;
+
+
+        const qty =
+            Number(
+                document.getElementById("orderQty").value
+            );
+
+
+        const price =
+            Number(
+                document.getElementById("orderPrice").value
+            );
+
+
+        const total =
+            qty * price;
+
+
+        const date =
+            document.getElementById("orderDate").value;
+
+
+        const status =
+            document.getElementById("orderStatus").value;
+
+
+        if(editId){
+
+            const order =
+                orders.find(o=>o.id === editId);
+
+
+            if(order){
+
+                order.student = student;
+                order.food = food;
+                order.category = category;
+                order.qty = qty;
+                order.price = price;
+                order.total = total;
+                order.date = date;
+                order.status = status;
+
+            }
+
+            toast("Order updated successfully.");
+
+        }else{
+
+            orders.push({
+
+                id:Date.now(),
+
+                student,
+                food,
+                category,
+                qty,
+                price,
+                total,
+                date,
+                status
+
+            });
+
+            toast("Order added successfully.");
+
+        }
+
+
+        saveData();
+
+        renderOrders();
+
+        updateDashboard();
+
+        refreshAnalytics();
+
+        closeOrderModal();
+
+    });
+
+
+/* EDIT ORDER */
+
+function editOrder(id){
+
+    const order =
+        orders.find(o=>o.id === id);
+
+
+    if(!order) return;
+
+
+    populateFoodDropdown();
+
+
+    document.getElementById("editOrderId")
+        .value = order.id;
+
+
+    document.getElementById("studentName")
+        .value = order.student;
+
+
+    document.getElementById("orderFood")
+        .value = order.food;
+
+
+    document.getElementById("orderCategory")
+        .value = order.category;
+
+
+    document.getElementById("orderQty")
+        .value = order.qty;
+
+
+    document.getElementById("orderPrice")
+        .value = order.price;
+
+
+    document.getElementById("orderTotal")
+        .value = order.total;
+
+
+    document.getElementById("orderDate")
+        .value = order.date;
+
+
+    document.getElementById("orderStatus")
+        .value = order.status;
+
+
+    document.getElementById("orderModalTitle")
+        .textContent = "Edit Order";
+
+
+    document.getElementById("orderModal")
+        .classList.add("show");
+
+}
+
+
+/* DELETE ORDER */
+
+function deleteOrder(id){
+
+    if(!confirm("Delete this order?"))
+        return;
+
+
+    orders =
+        orders.filter(o=>o.id !== id);
+
+
+    saveData();
+
+    renderOrders();
+
+    updateDashboard();
+
+    refreshAnalytics();
+
+    toast("Order deleted.");
+
+}
+
+
+/* =====================================================
+   FOOD MANAGEMENT
+===================================================== */
+
+function renderFoods(){
+
+    const tbody =
+        document.getElementById("foodTable");
+
+
+    tbody.innerHTML =
+        foods.map(f=>`
+
+            <tr>
+
+                <td>
+                    <strong>${escapeHTML(f.name)}</strong>
+                </td>
+
+                <td>${f.category}</td>
+
+                <td>${money(f.price)}</td>
+
+                <td>${f.quantity}</td>
+
+                <td>
+
+                    <span class="badge ${
+                        f.quantity > 0
+                        ? "completed"
+                        : "cancelled"
+                    }">
+
+                        ${
+                            f.quantity > 0
+                            ? "Available"
+                            : "Out of Stock"
+                        }
+
+                    </span>
+
+                </td>
+
+                <td>
+
+                    <button
+                        class="btn btn-secondary btn-small"
+                        onclick="editFood(${f.id})">
+                        Edit
+                    </button>
+
+                    <button
+                        class="btn btn-danger btn-small"
+                        onclick="deleteFood(${f.id})">
+                        Delete
+                    </button>
+
+                </td>
+
+            </tr>
+
+        `).join("");
+
+}
+
+
+function openFoodModal(){
+
+    document.getElementById("foodForm")
+        .reset();
+
+    document.getElementById("editFoodId")
+        .value = "";
+
+    document.getElementById("foodModalTitle")
+        .textContent = "Add Food Item";
+
+    document.getElementById("foodModal")
+        .classList.add("show");
+
+}
+
+
+function closeFoodModal(){
+
+    document.getElementById("foodModal")
+        .classList.remove("show");
+
+}
+
+
+/* SAVE FOOD */
+
+document
+    .getElementById("foodForm")
+    .addEventListener("submit",function(e){
+
+        e.preventDefault();
+
+
+        const editId =
+            Number(
+                document.getElementById("editFoodId").value
+            );
+
+
+        const name =
+            document.getElementById("foodName")
+            .value.trim();
+
+
+        const category =
+            document.getElementById("foodCategory")
+            .value;
+
+
+        const price =
+            Number(
+                document.getElementById("foodPrice").value
+            );
+
+
+        const quantity =
+            Number(
+                document.getElementById("foodQuantity").value
+            );
+
+
+        if(editId){
+
+            const food =
+                foods.find(f=>f.id === editId);
+
+
+            if(food){
+
+                food.name = name;
+                food.category = category;
+                food.price = price;
+                food.quantity = quantity;
+
+            }
+
+            toast("Food item updated.");
+
+        }else{
+
+            foods.push({
+
+                id:Date.now(),
+                name,
+                category,
+                price,
+                quantity
+
+            });
+
+            toast("Food item added.");
+
+        }
+
+
+        saveData();
+
+        renderFoods();
+
+        populateFoodDropdown();
+
+        closeFoodModal();
+
+    });
+
+
+function editFood(id){
+
+    const food =
+        foods.find(f=>f.id === id);
+
+
+    if(!food) return;
+
+
+    document.getElementById("editFoodId")
+        .value = food.id;
+
+
+    document.getElementById("foodName")
+        .value = food.name;
+
+
+    document.getElementById("foodCategory")
+        .value = food.category;
+
+
+    document.getElementById("foodPrice")
+        .value = food.price;
+
+
+    document.getElementById("foodQuantity")
+        .value = food.quantity;
+
+
+    document.getElementById("foodModalTitle")
+        .textContent = "Edit Food Item";
+
+
+    document.getElementById("foodModal")
+        .classList.add("show");
+
+}
+
+
+function deleteFood(id){
+
+    if(!confirm("Delete this food item?"))
+        return;
+
+
+    foods =
+        foods.filter(f=>f.id !== id);
+
+
+    saveData();
+
+    renderFoods();
+
+    populateFoodDropdown();
+
+    toast("Food item deleted.");
+
+}
+
+
+/* =====================================================
+   ANALYTICS
+===================================================== */
+
+function refreshAnalytics(){
+
+    renderDailyChart();
+
+    renderCategoryChart();
+
+    renderFoodPerformance();
+
+}
+
+
+/* DAILY SALES */
+
+function renderDailyChart(){
+
+    const chart =
+        document.getElementById("dailyChart");
+
+
+    const days = [];
+
+
+    for(let i=6;i>=0;i--){
+
+        days.push(today(-i));
+
+    }
+
+
+    const values =
+        days.map(date=>{
+
+            return orders
+                .filter(
+                    o =>
+                    o.date === date &&
+                    o.status !== "Cancelled"
+                )
+                .reduce(
+                    (sum,o)=>
+                    sum + Number(o.total),
+                    0
+                );
+
+        });
+
+
+    const max =
+        Math.max(...values,1);
+
+
+    chart.innerHTML =
+        values.map((value,index)=>{
+
+            const height =
+                Math.max(
+                    5,
+                    (value/max)*200
+                );
+
+
+            const label =
+                days[index].slice(5);
+
+
+            return `
+
+                <div class="bar-container">
+
+                    <div class="bar-value">
+                        ${money(value)}
+                    </div>
+
+                    <div
+                        class="bar"
+                        style="height:${height}px">
+                    </div>
+
+                    <div class="bar-label">
+                        ${label}
+                    </div>
+
+                </div>
+
+            `;
+
+        }).join("");
+
+}
+
+
+/* CATEGORY SALES */
+
+function renderCategoryChart(){
+
+    const chart =
+        document.getElementById("categoryChart");
+
+
+    const categories = {
+
+        Breakfast:0,
+        Lunch:0,
+        Snacks:0,
+        Beverages:0,
+        Desserts:0
+
+    };
+
+
+    orders
+        .filter(o=>o.status !== "Cancelled")
+        .forEach(o=>{
+
+            categories[o.category] =
+                (categories[o.category] || 0)
+                + Number(o.total);
+
+        });
+
+
+    const values =
+        Object.entries(categories);
+
+
+    const max =
+        Math.max(
+            ...values.map(x=>x[1]),
+            1
+        );
+
+
+    chart.innerHTML =
+        values.map(([name,value])=>{
+
+            const height =
+                Math.max(
+                    5,
+                    (value/max)*200
+                );
+
+
+            return `
+
+                <div class="bar-container">
+
+                    <div class="bar-value">
+                        ${money(value)}
+                    </div>
+
+                    <div
+                        class="bar"
+                        style="height:${height}px">
+                    </div>
+
+                    <div class="bar-label">
+                        ${name}
+                    </div>
+
+                </div>
+
+            `;
+
+        }).join("");
+
+}
+
+
+/* FOOD PERFORMANCE */
+
+function renderFoodPerformance(){
+
+    const tbody =
+        document.getElementById(
+            "foodPerformance"
+        );
+
+
+    const map = {};
+
+
+    orders
+        .filter(o=>o.status !== "Cancelled")
+        .forEach(o=>{
+
+            if(!map[o.food]){
+
+                map[o.food] = {
+                    qty:0,
+                    revenue:0
+                };
+
+            }
+
+
+            map[o.food].qty +=
+                Number(o.qty);
+
+
+            map[o.food].revenue +=
+                Number(o.total);
+
+        });
+
+
+    const rows =
+        Object.entries(map)
+        .sort(
+            (a,b)=>
+            b[1].revenue-a[1].revenue
+        );
+
+
+    tbody.innerHTML =
+        rows.map(([food,data])=>`
+
+            <tr>
+
+                <td>
+                    <strong>${escapeHTML(food)}</strong>
+                </td>
+
+                <td>${data.qty}</td>
+
+                <td>${money(data.revenue)}</td>
+
+                <td>
+
+                    <span class="badge completed">
+                        ${
+                            data.qty >= 3
+                            ? "High"
+                            : "Normal"
+                        }
+                    </span>
+
+                </td>
+
+            </tr>
+
+        `).join("");
+
+}
+
+
+/* =====================================================
+   AI INSIGHTS
+===================================================== */
+
+function generateInsights(){
+
+    const container =
+        document.getElementById(
+            "insightsContainer"
+        );
+
+
+    const valid =
+        orders.filter(
+            o=>o.status !== "Cancelled"
+        );
+
+
+    if(!valid.length){
+
+        container.innerHTML =
+            "<p>No data available for analysis.</p>";
+
+        return;
+
+    }
+
+
+    /* BEST ITEM */
+
+    const itemMap = {};
+
+
+    valid.forEach(o=>{
+
+        itemMap[o.food] =
+            (itemMap[o.food] || 0)
+            + Number(o.qty);
+
+    });
+
+
+    const bestItem =
+        Object.entries(itemMap)
+        .sort((a,b)=>b[1]-a[1])[0];
+
+
+    /* CATEGORY */
+
+    const categoryMap = {};
+
+
+    valid.forEach(o=>{
+
+        categoryMap[o.category] =
+            (categoryMap[o.category] || 0)
+            + Number(o.total);
+
+    });
+
+
+    const bestCategory =
+        Object.entries(categoryMap)
+        .sort((a,b)=>b[1]-a[1])[0];
+
+
+    /* REVENUE */
+
+    const revenue =
+        valid.reduce(
+            (sum,o)=>sum+Number(o.total),
+            0
+        );
+
+
+    /* AVERAGE */
+
+    const average =
+        revenue / valid.length;
+
+
+    /* LOW ITEM */
+
+    const lowItem =
+        Object.entries(itemMap)
+        .sort((a,b)=>a[1]-b[1])[0];
+
+
+    /* TODAY */
+
+    const todaySales =
+        valid
+        .filter(o=>o.date === today())
+        .reduce(
+            (sum,o)=>sum+Number(o.total),
+            0
+        );
+
+
+    container.innerHTML = `
+
+        <div class="insight">
+
+            <strong>🔥 Best-Selling Food</strong>
+
+            <p>
+                ${escapeHTML(bestItem[0])}
+                is currently the most ordered item,
+                with ${bestItem[1]} items sold.
+            </p>
+
+        </div>
+
+
+        <div class="insight">
+
+            <strong>💰 Highest Revenue Category</strong>
+
+            <p>
+                ${bestCategory[0]} generated
+                ${money(bestCategory[1])}
+                in revenue.
+            </p>
+
+        </div>
+
+
+        <div class="insight">
+
+            <strong>📈 Total Revenue</strong>
+
+            <p>
+                The canteen has generated
+                ${money(revenue)}
+                from ${valid.length}
+                valid orders.
+            </p>
+
+        </div>
+
+
+        <div class="insight">
+
+            <strong>🧮 Average Order Value</strong>
+
+            <p>
+                The average order value is
+                ${money(average)}.
+            </p>
+
+        </div>
+
+
+        <div class="insight">
+
+            <strong>💡 Promotion Suggestion</strong>
+
+            <p>
+                Consider promoting
+                ${escapeHTML(bestItem[0])}
+                because it currently has the highest
+                demand.
+            </p>
+
+        </div>
+
+
+        <div class="insight">
+
+            <strong>⚠️ Low-Selling Item</strong>
+
+            <p>
+                ${escapeHTML(lowItem[0])}
+                has relatively low order volume.
+                Consider reviewing its pricing,
+                availability or promotion.
+            </p>
+
+        </div>
+
+
+        <div class="insight">
+
+            <strong>📅 Today's Performance</strong>
+
+            <p>
+                Today's recorded revenue is
+                ${money(todaySales)}.
+            </p>
+
+        </div>
+
+    `;
+
+}
+
+
+/* =====================================================
+   REPORTS
+===================================================== */
+
+function updateReports(){
+
+    const valid =
+        orders.filter(
+            o=>o.status !== "Cancelled"
+        );
+
+
+    const revenue =
+        valid.reduce(
+            (sum,o)=>sum+Number(o.total),
+            0
+        );
+
+
+    const items =
+        valid.reduce(
+            (sum,o)=>sum+Number(o.qty),
+            0
+        );
+
+
+    const average =
+        valid.length
+        ? revenue/valid.length
+        : 0;
+
+
+    const itemMap =
+        calculateItemSales();
+
+
+    const bestItem =
+        Object.entries(itemMap)
+        .sort((a,b)=>b[1]-a[1])[0];
+
+
+    const categoryMap = {};
+
+
+    valid.forEach(o=>{
+
+        categoryMap[o.category] =
+            (categoryMap[o.category] || 0)
+            + Number(o.total);
+
+    });
+
+
+    const bestCategory =
+        Object.entries(categoryMap)
+        .sort((a,b)=>b[1]-a[1])[0];
+
+
+    document.getElementById("reportOrders")
+        .textContent = valid.length;
+
+
+    document.getElementById("reportRevenue")
+        .textContent = money(revenue);
+
+
+    document.getElementById("reportItems")
+        .textContent = items;
+
+
+    document.getElementById("reportAverage")
+        .textContent = money(average);
+
+
+    document.getElementById("reportBestItem")
+        .textContent =
+        bestItem ? bestItem[0] : "-";
+
+
+    document.getElementById("reportBestCategory")
+        .textContent =
+        bestCategory ? bestCategory[0] : "-";
+
+}
+
+
+/* =====================================================
+   CSV EXPORT
+===================================================== */
+
+function exportCSV(){
+
+    if(!orders.length){
+
+        toast("No orders to export.");
+
+        return;
+
+    }
+
+
+    const headers = [
+
+        "Order ID",
+        "Student",
+        "Food",
+        "Category",
+        "Quantity",
+        "Price",
+        "Total",
+        "Date",
+        "Status"
+
+    ];
+
+
+    const rows =
+        orders.map(o=>[
+
+            o.id,
+            o.student,
+            o.food,
+            o.category,
+            o.qty,
+            o.price,
+            o.total,
+            o.date,
+            o.status
+
+        ]);
+
+
+    const csv = [
+
+        headers,
+
+        ...rows
+
+    ].map(row=>
+
+        row.map(value=>
+
+            `"${String(value)
+                .replace(/"/g,'""')}"`
+
+        ).join(",")
+
+    ).join("\n");
+
+
+    const blob =
+        new Blob(
+            [csv],
+            {type:"text/csv"}
+        );
+
+
+    const url =
+        URL.createObjectURL(blob);
+
+
+    const a =
+        document.createElement("a");
+
+
+    a.href = url;
+
+    a.download =
+        "college-canteen-sales.csv";
+
+    a.click();
+
+
+    URL.revokeObjectURL(url);
+
+    toast("CSV exported successfully.");
+
+}
+
+
+/* =====================================================
+   PRINT REPORT
+===================================================== */
+
+function printReport(){
+
+    window.print();
+
+}
+
+
+/* =====================================================
+   SECURITY HELPERS
+===================================================== */
+
+function escapeHTML(value){
+
+    return String(value)
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;")
+        .replace(/'/g,"&#039;");
+
+}
+
+
+function escapeAttribute(value){
+
+    return escapeHTML(value);
+
+}
+
+
+/* =====================================================
+   INITIALIZATION
+===================================================== */
+
+function initialize(){
+
+    saveData();
+
+    renderOrders();
+
+    renderFoods();
+
+    populateFoodDropdown();
+
+    updateDashboard();
+
+    refreshAnalytics();
+
+    generateInsights();
+
+    updateReports();
+
+}
+
+
+initialize();
+
+</script>
+
+</body>
+</html>
+```
